@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <phonegap></phonegap>
+    <title>Bitcoin Price Watcher</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css"  href="jquery.mobile-1.4.0.min.css" />
+    <link rel="stylesheet" type="text/css" href="main.css">
+    <script src="jquery-2.1.0.min.js"></script>
+    <script src="jquery.mobile-1.4.0.min.js"></script>
+    <script src="kline.js"></script>
+    <script src="highstock.js"></script>
+</head>
+<body>
+    <div data-role="header" data-position="fixed">
+        <h1>Bitcoin Price Watcher</h1>
+        <div data-role="navbar">
+            <ul>
+                <li>
+                    <a href="#market" class="ui-btn-active" data-transition="slide" data-direction="reverse">Market</a>
+                </li>
+                <li>
+                    <a href="#trade" data-transition="slide">Trade</a>
+                </li>
+                <li><a href="#kline" data-transition="slide">Kline</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div data-role="page" id="market">
+
+        <div data-role="content">
+            <div class="site">
+                <h2>OKCoin</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>High</th>
+                            <th>Low</th>
+                            <th>Last</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="okcoin_btc" class="click_watcher">
+                            <td>Btc</td>
+                            <td colspan="3">Click to refresh</td>
+                        </tr>
+                        <tr id="okcoin_ltc" class="click_watcher">
+                            <td>Ltc</td>
+                            <td colspan="3">Click to refresh</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="site">
+                <h2>Btc-e</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>High</th>
+                            <th>Low</th>
+                            <th>Last</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="click_watcher" id="btce_btc">
+                            <td>Btc</td>
+                            <td colspan="3">Click to refresh</td>
+                        </tr>
+                        <tr class="click_watcher" id="btce_ltc">
+                        <td>Ltc</td>
+                            <td colspan="3">Click to refresh</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="site">
+                <h2>Btctrade</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>High</th>
+                            <th>Low</th>
+                            <th>Last</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="btctrade_ltc" class="click_watcher">
+                            <td>Ltc</td>
+                            <td colspan="3">Click to refresh</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- /content -->
+
+        <footer data-role="footer" data-position="fixed">
+            <div class="refreshtoolbar">
+                <ul>
+                    <li><a site="okcoin_btc" class="click_watcher ui-btn" href="#">OKCoin BTC</a></li>
+                    <li><a site="okcoin_ltc" class="click_watcher ui-btn" href="#">OKCoin LTC</a></li>
+                    <li><a site="btcchina_btc" class="click_watcher ui-btn" href="#">BTC China</a></li>
+                    <li><a site="btctrade_ltc" class="click_watcher ui-btn" href="#">BtcTrade LTC</a></li>
+                </ul>
+            </div>
+        </footer>
+    </div>
+    <!-- /page -->
+
+    <div data-role="page" id="trade">
+        <span id="login_state" style="color:red;">未登录</span>
+        <div class="ui-field-contain">
+            <label for="captcha">验证码：</label>
+            <input type="text" name="captcha">
+            <img title="看不清，点击再换一张" src="http://www.btctrade.com/index/captcha?t=743420" onclick="this.src='http://www.btctrade.com/index/captcha?t='+Math.random()">
+            <a class="ui-btn" id="rePWButton">登录</a>
+            <a class="ui-btn" id="refreshButton">刷新</a>
+        </div>
+        <div>
+            <table>
+               <thead>
+                   <tr>
+                       <th width="89"></th>
+                       <th width="106">可用余额</th>
+                       <th>冻结数量</th>
+                   </tr>
+               </thead>
+               <tbody>
+                   <tr>
+                       <td>人民币(RMB)</td>
+                       <td class="buy" id="ua_rmb_over">N/A</td>
+                       <td class="buy tableEnd" id="ua_rmb_lock">N/A</td>
+                   </tr>
+                   <tr>
+                       <td>比特币(BTC)</td>
+                       <td class="buy" id="ua_btc_over">N/A</td>
+                       <td class="tableEnd buy" id="ua_btc_lock">N/A</td>
+                   </tr>
+                   <tr>
+                       <td>莱特币(LTC)</td>
+                       <td class="buy" id="ua_ltc_over">N/A</td>
+                       <td class="tableEnd buy" id="ua_ltc_lock">N/A</td>
+                   </tr>
+                   <tr>
+                       <td><b>总资产</b></td>
+                       <td class="tableEnd" colspan="2"><span class="buy" id="ua_rmb">N/A</span></td>
+                   </tr>
+               </tbody>
+           </table>
+        </div>
+
+        <table class="Transaction">
+            <thead>
+            <tr>
+                <th width="50"></th>
+                <th width="93">价格</th>
+                <th width="96">剩余数量</th>
+                <th class="tableEnd">操作</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <div class="LTCBox">
+            <div class="ui-field-contain">
+                <h3>买入LTC</h3>
+                <div class="ui-field-contain">
+                    <div>当前卖价：<b id="sale_price">0.00</b></div>
+                </div>
+                <div class="ui-field-contain">
+                    <label for="pricein">买入价格：</label>
+                    <input type="text" name="pricein" id="pricein" onkeyup="vNum(this,2);buy_max(this.value);sumprice('buy')">
+                    <div class="box">
+                        <div class="pricetoolbar">
+                            <ul>
+                                <li><a class="ui-btn" href="#" onclick="$('#pricein').val($('#buy_price').text());vNum($('#pricein')[0],2);buy_max($('#pricein').val());sumprice('buy');">买价</a></li>
+                                <li><a class="ui-btn" href="#" onclick="fast_price(1,-0.1);">-0.1</a></li>
+                                <li><a class="ui-btn" href="#" onclick="fast_price(1,-0.5);">-0.5</a></li>
+                            </ul>
+                        </div>
+                        <div class="pricetoolbar">
+                            <ul>
+                                <li><a class="ui-btn" href="#" onclick="$('#pricein').val($('#sale_price').text());vNum($('#pricein')[0],2);buy_max($('#pricein').val());sumprice('buy');">卖价</a></li>
+                                <li><a class="ui-btn" href="#" onclick="fast_price(1,0.1);">+0.1</a></li>
+                                <li><a class="ui-btn" href="#" onclick="fast_price(1,0.5);">+0.5</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui-field-contain">
+                    <label for="buy_max">最大可买：</label>
+                    <a class="ui-btn" id="buy_max" onclick="$('#numberin').val(this.innerHTML)">0</a>
+                </div>
+                <div class="ui-field-contain">
+                    <label for="numberin">买入数量：</label>
+                    <input type="text" name="numberin" id="numberin" onkeyup="vNum(this,3);sumprice('buy')"></div>
+                <div>总价：<b id="buy_sumprice">￥0.00</b></div>
+                <a data-role="button" id="trustbtnin" onclick="tbtcSubmit('in')">买入</a>
+                <p id="trustmsgin">您下的每笔单都会被处理，请您谨慎，不要重复下单。</p>
+            </div>
+            <div class="ui-field-contain">
+                <h3>卖出LTC</h3>
+                <div class="ui-field-contain">
+                    <div>当前买价：<b id="buy_price">0.00</b></div>
+                </div>
+                <div class="ui-field-contain">
+                    <label for="priceout">卖出价格：</label>
+                    <input type="text" name="priceout" id="priceout" onkeyup="vNum(this,2);sumprice('sale')">
+                    <div class="box">
+                        <div class="pricetoolbar">
+                            <ul>
+                                <li><a class="ui-btn" href="#" onclick="$('#priceout').val($('#buy_price').text());vNum($('#priceout')[0],2);sumprice('sale');">买价</a></li>
+                                <li><a class="ui-btn" href="#" onclick="fast_price(2,-0.1);">-0.1</a></li>
+                                <li><a class="ui-btn" href="#" onclick="fast_price(2,-0.5);">-0.5</a></li>
+                            </ul>
+                        </div>
+                        <div class="pricetoolbar">
+                            <ul>
+                                <li><a class="ui-btn" href="#" onclick="$('#priceout').val($('#sale_price').text());vNum($('#priceout')[0],2);sumprice('sale');">卖价</a></li>
+                                <li><a class="ui-btn" href="#" onclick="fast_price(2,0.1);">+0.1</a></li>
+                                <li><a class="ui-btn" href="#" onclick="fast_price(2,0.5);">+0.5</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui-field-contain">
+                    <label for="sale_max">最大可卖：</label>
+                    <a class="ui-btn" id="sale_max" onclick="$('#numberout').val(this.innerHTML)">0</a>
+                </div>
+                <div class="ui-field-contain">
+                    <label for="numberout">卖出数量：</label>
+                    <input type="text" name="numberout" id="numberout" onkeyup="vNum(this,3);sumprice('sale')"></div>
+                <div>总价：<b id="sale_sumprice">￥0.00</b></div>
+                <a data-role="button" id="trustbtnout" onclick="tbtcSubmit('out')">卖出</a>
+                <p id="trustmsgout">您下的每笔单都会被处理，请您谨慎，不要重复下单。</p>
+            </div>
+        </div>
+    </div>
+
+    <div data-role="page" id="kline">
+        <div id="klineImage" class="klineImage">
+
+            <div class="marketSelect clear" id="marketImageOld" >
+                <ul class="selectDate">
+                    <li id="okcoinData3" class="cur">
+                        <a href="javascript:klineData(3,3);">日</a>
+                    </li>
+                    <li id="okcoinData1" >
+                        <a href="javascript:klineData(3,1);">5分钟</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="marketImage"  id="mtgoxDataDiv" style="overflow: scroll;">
+                <div id="container" style="height: 400px; width: 720px"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <script type="text/javascript" src="index.js"></script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+<widget id="com.glyme.btcwatcher" version="1.0.0">
+    <name>BtcWatcher</name>
+    <description>
+        A phonegap app built to monitor bitcoin/litecoin price on main trade plateforms in China, including Btcchina.com and okcoin.com.
+    </description>
+    <author email="glymehrvrd@gmail.com">
+        Glyme Water
+    </author>
+    <content src="index.html" />
+    <access origin="*" />
+    <preference name="Fullscreen" value="true" />
+    <preference name="WebViewBounce" value="true" />
+</widget>

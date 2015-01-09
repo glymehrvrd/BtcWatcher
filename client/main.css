@@ -1,0 +1,53 @@
+table{
+    text-align: center;
+}
+.site{
+    text-size: 12px;
+}
+td, th{
+    width: 75px;
+}
+.ui-header .ui-title,.ui-footer .ui-title {
+    margin-right: 0 !important; margin-left: 0 !important;
+}
+.refreshtoolbar ul{
+    display: block;
+    list-style-type: none;
+    margin: 0px;
+    border: 0px;
+    padding: 0px;
+    position: relative;
+    overflow: visible;
+    max-width: 100%;
+}
+.refreshtoolbar li{
+    display: inline;
+    float: left;
+    width: 25%;
+}
+.refreshtoolbar .ui-btn{
+    margin: 0px;
+    border: 0px;
+    display: block;
+    border-top-width: 0;
+    border-bottom-width: 0;
+}
+
+.pricetoolbar ul{
+    display: block;
+    list-style-type: none;
+    margin: 0px;
+    border: 0px;
+    padding: 0px;
+    position: relative;
+    overflow: visible;
+    max-width: 100%;
+}
+.pricetoolbar li{
+    display: inline;
+    float: left;
+    width: 33.3%;
+}
+.pricetoolbar .ui-btn{
+    display: block;
+}

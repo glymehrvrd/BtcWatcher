@@ -1,0 +1,5 @@
+name: pgbtcwatcher
+version: 1
+handle:
+  - rewrite: if( path ~ "^/$" ) goto "/client/" 
+  - rewrite: if( !is_file() && !is_dir()  && path ~ "/(.*)" ) goto "/client/$1"
